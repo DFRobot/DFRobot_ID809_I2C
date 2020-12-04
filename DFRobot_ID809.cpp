@@ -325,7 +325,7 @@ uint8_t DFRobot_ID809::getEnrolledIDList(uint8_t* list)
   
   free(header);
   if(ISIIC == true)
-     delay(120     );
+     delay(120);
  
   uint8_t ret = responsePayload(buf);
   LDBG("ret=");
@@ -351,7 +351,7 @@ uint8_t DFRobot_ID809::getEnrolledIDList(uint8_t* list)
   free(data);
   return ret;
 }
-/*wang*/
+
 uint8_t DFRobot_ID809::storeFingerprint(uint8_t ID)
 {
   char data[4] = {0};
@@ -375,7 +375,7 @@ uint8_t DFRobot_ID809::storeFingerprint(uint8_t ID)
   return ret;
 
 }
-/*wang*/
+
 uint8_t DFRobot_ID809::delFingerprint(uint8_t ID)
 {
   char data[4] = {0};
@@ -395,7 +395,7 @@ uint8_t DFRobot_ID809::delFingerprint(uint8_t ID)
   LDBG(ret);
   return ret;
 }
-/*wang*/
+
 uint8_t DFRobot_ID809::search()
 {
   char data[6] = {0};
@@ -426,6 +426,8 @@ uint8_t DFRobot_ID809::verify(uint8_t ID)
   pCmdPacketHeader_t header = pack(CMD_TYPE, CMD_VERIFY, data, 4);
   sendPacket(header);
   free(header);
+  if(ISIIC == true)
+  delay(50);
   uint8_t ret = responsePayload(buf);
   LDBG("ret=");
   LDBG(ret);
@@ -487,6 +489,8 @@ uint8_t DFRobot_ID809::getBrokenID()
   pCmdPacketHeader_t header = pack(CMD_TYPE, CMD_GET_BROKEN_ID, data, 4);
   sendPacket(header);
   free(header);
+  if(ISIIC == true)
+  delay(50);
   uint8_t ret = responsePayload(buf);
   LDBG("ret=");
   LDBG(ret);
@@ -504,6 +508,8 @@ uint8_t DFRobot_ID809::loadFingerprint(uint8_t ID, uint8_t RamBufferID)
   pCmdPacketHeader_t header = pack(CMD_TYPE, CMD_LOAD_CHAR, data, 4);
   sendPacket(header);
   free(header);
+  if(ISIIC == true)
+  delay(50);
   uint8_t ret = responsePayload(buf);
   LDBG("ret=");
   LDBG(ret);
