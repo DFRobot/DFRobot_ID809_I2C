@@ -19,7 +19,7 @@
 #include <DFRobot_ID809.h>
 
 #define COLLECT_NUMBER 3  //Fingerprint sampling times, can be set to 1-3
-#define WAKEUP         1  //wake up pin 
+#define IRQ         6  //IRQ pin 
 
 DFRobot_ID809_IIC fingerprint;
 //DFRobot_ID809_UART fingerprint(115200);
@@ -46,7 +46,7 @@ void setup(){
 
 //Blue LED Comparison mode  Yellow LED Registration mode  Red Deletion mode 
 void loop(){
-  if(digitalRead(WAKEUP)){
+  if(digitalRead(IRQ)){
     uint16_t i = 0;
     /*Capture fingerprint image, 5s idle timeout 
       Return 0 if succeed, otherwise return ERR_ID809
