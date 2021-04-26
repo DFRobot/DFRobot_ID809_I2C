@@ -894,19 +894,20 @@ void DFRobot_ID809_IIC::sendPacket(pCmdPacketHeader_t pBuf)
     LDBG("pBuf ERROR!! : null pointer");
   }
   uint8_t * _pBuf = (uint8_t *)pBuf;
-  #if defined(ESP8266) 
-  #else
+
   _pWire->requestFrom(_deviceAddr, 1);
 
   if(0xee != _pWire->read()) {
     _pWire->requestFrom(_deviceAddr, 1);
 
     while(0xee != _pWire->read()){_pWire->requestFrom(_deviceAddr, 1);
-
+ #if defined(ESP8266) 
+ yield();
+ #endif
 	}
     _pWire->requestFrom(_deviceAddr, 1);
   }
-  #endif
+
   _pWire->beginTransmission(_deviceAddr);
   
   for(uint16_t i = 0; i < _PacketSize; i++) {
@@ -939,7 +940,7 @@ size_t DFRobot_ID809_IIC::readN(void* pBuf, size_t size)
 	//Serial.print(_pBuf[i + len - size],HEX);
 	//Serial.print(" ");
   }
-
+  delay(10);
   if( _pWire->endTransmission() != 0) {
     return 0;
   }
