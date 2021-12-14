@@ -1,16 +1,15 @@
 /*!
- * @file DFRobot_ID809.cpp
- * @brief Define the basic structure of DFRobot_ID809 class and the implementation of underlying methods
+ * @file DFRobot_ID809_I2C.cpp
+ * @brief Define the basic structure of DFRobot_ID809_I2C class and the implementation of underlying methods
  * @copyright   Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
- * @licence     The MIT License (MIT)
+ * @License     The MIT License (MIT)
  * @author [Eddard](eddard.liu@dfrobot.com)
- * @version  V1.0
+ * @version  V1.1
  * @date  2020-03-19
- * @get from https://www.dfrobot.com
- * @url https://github.com/cdjq/DFRobot_ID809
+ * @url https://github.com/cdjq/DFRobot_ID809_I2C
  */
 
-#include <DFRobot_ID809.h>
+#include <DFRobot_ID809_I2C.h>
 #include <Arduino.h>
 #include <string.h>
 #include <stdio.h>
@@ -148,14 +147,15 @@ String DFRobot_ID809::getDeviceInfo()
     return "";
   }
   uint16_t dataLen = buf[0]+(buf[1]<<8)+1;
+    //Serial.print("dataLen=");
+  //Serial.println(dataLen);
   if((data = (char *)malloc(dataLen)) == NULL) {
     LDBG("no memory!!!\r\n");
     while(1);
   }
   data[dataLen] = 0;
   result = responsePayload(data);
-  LDBG("result=");
-  LDBG(result);
+
   String ret = String(data);
   free(data);
   return ret;
@@ -229,9 +229,36 @@ String DFRobot_ID809::getModuleSN()
 uint8_t DFRobot_ID809::ctrlLED(eLEDMode_t mode,eLEDColor_t color,uint8_t blinkCount)
 {
   char data[4] = {0};
-  data[0] = mode;
-  data[2] = data[1] = color;
-  data[3] = blinkCount;
+  if(FINGERPRINT_CAPACITY == 80){
+    data[0] = mode;
+    data[2] = data[1] = color;
+    data[3] = blinkCount;
+  }else{
+	if(mode == 1){
+	  data[0] = 2;
+	} else if(mode == 2){
+		data[0] = 4;
+	} else if(mode == 3){
+	    data[0] = 1;
+	} else if(mode == 4){
+		data[0] = 0;
+	} else if(mode == 5){
+		data[0] = 3;
+	}
+	if(color = eLEDRed){
+      data[2] = data[1] = color +0x82;
+    }else if(color = eLEDBlue){
+	  data[2] = data[1] = color +0x84;
+	}else{
+		
+		data[2] = data[1] = color +0x86;
+	}
+		
+	
+	data[3] = blinkCount;  
+	  
+	  
+  }
   pCmdPacketHeader_t header = pack(CMD_TYPE, CMD_SLED_CTRL, data, 4);
   sendPacket(header);
   free(header);
@@ -713,6 +740,7 @@ uint8_t DFRobot_ID809::responsePayload(void* buf)
   }
 
   memcpy(packet, &header, 10);
+  //Serial.println(dataLen);
   dataCount = readN(packet->payload, dataLen);
   cks = packet->payload[dataLen-2]+(packet->payload[dataLen-1]<<8);
   ret = (header.RET&0xFF);
@@ -875,20 +903,34 @@ String DFRobot_ID809::getErrorDescription()
 }
 
 
-DFRobot_ID809_IIC::DFRobot_ID809_IIC(TwoWire *pWire, uint8_t address)
+DFRobot_ID809_I2C::DFRobot_ID809_I2C(TwoWire *pWire, uint8_t address)
 {
   _deviceAddr = address;
   _pWire = pWire;
-  ISIIC = true;
+  //ISIIC = true;
 }
 
-bool DFRobot_ID809_IIC::begin()
+bool DFRobot_ID809_I2C::begin()
 {
   _pWire->begin();
+  
+  
+  String str = getDeviceInfo();
+  //Serial.println(str[str.length()-1]);
+  if(str[str.length()-1] == '4'){
+	    
+	   FINGERPRINT_CAPACITY   =    80 ;
+	  
+	  //Serial.println(str[str.length()-1]);
+  }else if(str[str.length()-1] == '3'){
+	  //Serial.println(str[str.length()-1]);
+	   FINGERPRINT_CAPACITY  =   200 ;
+	  
+  }
   return true;
 }
 
-void DFRobot_ID809_IIC::sendPacket(pCmdPacketHeader_t pBuf)
+void DFRobot_ID809_I2C::sendPacket(pCmdPacketHeader_t pBuf)
 {
   if(pBuf == NULL) {
     LDBG("pBuf ERROR!! : null pointer");
@@ -907,16 +949,18 @@ void DFRobot_ID809_IIC::sendPacket(pCmdPacketHeader_t pBuf)
 	}
     _pWire->requestFrom(_deviceAddr, 1);
   }
-
+ 
   _pWire->beginTransmission(_deviceAddr);
-  
+  //Serial.println("tx->");
   for(uint16_t i = 0; i < _PacketSize; i++) {
    _pWire->write(_pBuf[i]);
+	//Serial.print(_pBuf[i],HEX);
+	//Serial.print(" ");
   }
   _pWire->endTransmission();
 }
 
-size_t DFRobot_ID809_IIC::readN(void* pBuf, size_t size)
+size_t DFRobot_ID809_I2C::readN(void* pBuf, size_t size)
 {
   uint8_t len = size;
   if(pBuf == NULL) {
@@ -927,84 +971,24 @@ size_t DFRobot_ID809_IIC::readN(void* pBuf, size_t size)
   _pWire->beginTransmission(_deviceAddr);
 
   while(size > 32) {
-    _pWire->requestFrom(_deviceAddr, 32);
+    
     for(uint16_t i = 0; i < 32; i++) {
+		_pWire->requestFrom(_deviceAddr, 1);
       _pBuf[i + len - size] = _pWire->read();
     }
     size -= 32;
   }
   //Serial.println("rx->");
-  _pWire->requestFrom(_deviceAddr, (uint8_t) size);
+  
   for(uint16_t i = 0; i < size; i++) {
+	  _pWire->requestFrom(_deviceAddr, (uint8_t) 1);
     _pBuf[i + len - size] = _pWire->read();
 	//Serial.print(_pBuf[i + len - size],HEX);
 	//Serial.print(" ");
   }
-  delay(10);
+ // delay(10);
   if( _pWire->endTransmission() != 0) {
     return 0;
   }
   return len;
-}
-
-DFRobot_ID809_UART::DFRobot_ID809_UART(uint32_t baudRate)
-{
-  _baudRate = baudRate;
-  ISIIC = false;
-  
-}
-
-
-bool DFRobot_ID809_UART::begin()
-{  
-  #ifdef  ESP_PLATFORM 
-    if(ARDUINO_VARIANT == "firebeetle32")
-    {
-      #define P0 33
-	  #define P1 32
-      Serial1.begin(_baudRate);
-    }
-	else{
-    Serial1.begin(_baudRate,P0,P1);
-	}
-  #else
-	  
-    Serial1.begin(_baudRate);
-    //Serial1.pins(2,5);
-  #endif
-  s = &Serial1;
-  if(s == NULL) {
-    return false;
-  }
-  return true;
-}
-
-
-void DFRobot_ID809_UART::sendPacket(pCmdPacketHeader_t header)
-{
-  
-  s->write((uint8_t *)header,_PacketSize);
-
-}
-
-
-size_t DFRobot_ID809_UART::readN(void* buffer, size_t len)
-{
-  size_t offset = 0,left = len;
-  uint8_t *buf = (uint8_t*)buffer;
-
-  long long curr = millis();
-  while(left) {
-    if(s->available()) {
-      buf[offset++] = s->read();
-      Serial.println(buf[offset++]);
-	  left--;
-    }
-    
-    if(millis() - curr > 5000) {
-     LDBG("----------!!!!!!!!!recv timeout----------");
-      break;
-    }
-  }
-  return offset;
 }

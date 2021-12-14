@@ -1,19 +1,18 @@
 /*!
- * @file DFRobot_ID809.h
- * @brief Define basic structure of DFRobot_ID809 class
- * @n This is an library for capacitive fingerprint module
+ * @file DFRobot_ID809_I2C.h
+ * @brief Define basic structure of DFRobot_ID809_I2C class
+ * @details  This is an library for capacitive fingerprint module
  * @n Main functions: fingerprint image capturing, fingerprint comparison, fingerprint deletion
  * @copyright   Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
- * @licence     The MIT License (MIT)
+ * @License     The MIT License (MIT)
  * @author [Eddard](eddard.liu@dfrobot.com)
- * @version  V1.0
- * @date  2020-03-19
- * @get from https://www.dfrobot.com
- * @url https://github.com/cdjq/DFRobot_ID809
+ * @version  V1.1
+ * @date  2021-12-14
+ * @url https://github.com/DFRobot/DFRobot_ID809_I2C
  */
 
-#ifndef _DFRobot_ID809_H
-#define _DFRobot_ID809_H
+#ifndef _DFRobot_ID809_I2C_H
+#define _DFRobot_ID809_I2C_H
 
 #if ARDUINO >= 100
 #include "Arduino.h"
@@ -31,7 +30,7 @@
   
 //Open this macro to see the detailed running process of the program 
 
-//#define ENABLE_DBG
+#define ENABLE_DBG
 #ifdef ENABLE_DBG
 #define LDBG(...) if(dbg) {dbg->print("["); dbg->print(__FUNCTION__); dbg->print("(): "); dbg->print(__LINE__); dbg->print(" ] "); dbg->println(__VA_ARGS__);}
 #else
@@ -40,9 +39,10 @@
 
 extern Stream *dbg;
 
-  /*
-   Frame struct of command packet 
-  */
+/**
+ * @struct pCmdPacketHeader_t
+ * Frame struct of command packet 
+ */
 typedef struct{
   uint16_t  PREFIX;
   uint8_t   SID;
@@ -52,9 +52,10 @@ typedef struct{
   uint8_t payload[0];
 }__attribute__ ((packed)) sCmdPacketHeader_t, *pCmdPacketHeader_t;
 
-  /*
-   Frame struct of response packet 
-  */
+/**
+ * @struct pRcmPacketHeader_t
+ * Frame struct of response packet 
+ */
 typedef struct{
   uint16_t  PREFIX;
   uint8_t   SID;
@@ -71,7 +72,7 @@ typedef struct{
 class DFRobot_ID809{
 public: 
 
-#define FINGERPRINT_CAPACITY     80      //Fingerprint module capacity
+//#define FINGERPRINT_CAPACITY     80      //Fingerprint module capacity
 #define MODULE_SN_SIZE           16      //Module SN length 
 
 
@@ -119,27 +120,36 @@ public:
 
 
 public:
-  
+
+  /**
+   * @struct eLEDMode_t
+   */
   typedef enum{
-    eBreathing = 1,  //Breathing 
-    eFastBlink,      //Quick blink
-    eKeepsOn,        //On
-    eNormalClose,    //Off
-    eFadeIn,         //Fade in 
-    eFadeOut,        //Fade out
-    eSlowBlink       //Slow blink
+    eBreathing = 1,  /**<Breathing >*/
+    eFastBlink,      /**<Quick blink>*/
+    eKeepsOn,        /**<On>*/
+    eNormalClose,    /**<Off>*/
+    eFadeIn,         /**<Fade in >*/
+    eFadeOut,        /**<Fade out>*/
+    eSlowBlink       /**<Slow blink>*/
   }eLEDMode_t;
-  
+
+  /**
+   * @struct eLEDColor_t
+   */
   typedef enum{
-    eLEDGreen = 1,   //green 
-    eLEDRed,         //red 
-    eLEDYellow,      //yellow
-    eLEDBlue,        //blue
-    eLEDCyan,        //cyan
-    eLEDMagenta,     //magenta
-    eLEDWhite        //white
+    eLEDGreen = 1,   /**<green >*/
+    eLEDRed,         /**<red >*/
+    eLEDYellow,      /**<yellow>*/
+    eLEDBlue,        /**<blue>*/
+    eLEDCyan,        /**<cyan>*/
+    eLEDMagenta,     /**<magenta>*/
+    eLEDWhite        /**<white>*/
   }eLEDColor_t;
-   
+
+  /**
+   * @struct eDeviceBaudrate_t
+   */  
   typedef enum{
     e9600bps = 1,
     e19200bps,
@@ -150,40 +160,46 @@ public:
     e460800bps,
     e921600bps
   }eDeviceBaudrate_t;
-  
+
+  /**
+   * @struct eError_t
+   */  
   typedef enum{
-    eErrorSuccess            = 0x00,    //Command processed successfully
-    eErrorFail               = 0x01,    //Command processing failed 
-    eErrorVerify             = 0x10,    //1:1 Templates comparison in specific ID failed 
-    eErrorIdentify           = 0x11,    //1:N comparison has been made, no same templates here 
-    eErrorTmplEmpty          = 0x12,    //No registered template in the designated ID 
-    eErrorTmplNotEmpty       = 0x13,    //Template already exists in the specified ID 
-    eErrorAllTmplEmpty       = 0x14,    //No registered Template 
-    eErrorEmptyIDNoexist     = 0x15,    //No registerable Template ID 
-    eErrorBrokenIDNoexist    = 0x16,    //No damaged Template 
-    eErrorInvalidTmplData    = 0x17,    //The designated Template Data is invalid 
-    eErrorDuplicationID      = 0x18,    //The fingerprint has been registered 
-    eErrorBadQuality         = 0x19,    //Poor quality fingerprint image 
-    eErrorMergeFail          = 0x1A,    //Template synthesis failed 
-    eErrorNotAuthorized      = 0x1B,    //Communication password not authorized 
-    eErrorMemory             = 0x1C,    //Error in exernal Flash burning 
-    eErrorInvalidTmplNo      = 0x1D,    //The designated template ID is invalid 
-    eErrorInvalidParam       = 0x22,    //Incorrect parameter has been used 
-    eErrorTimeOut            = 0x23,    //Acquisition timeout 
-    eErrorGenCount           = 0x25,    //Invalid number of fingerprint synthesis 
-    eErrorInvalidBufferID    = 0x26,    //Wrong Buffer ID value 
-    eErrorFPNotDetected      = 0x28,    //No fingerprint input into fingerprint reader 
-    eErrorFPCancel           = 0x41,    //Command cancelled 
-    eErrorRecvLength         = 0x42,    //Wrong length of recieved data 
-    eErrorRecvCks            = 0x43,    //Wrong check code 
-    eErrorGatherOut          = 0x45,    //Exceed upper limit of acquisition times 
-    eErrorRecvTimeout        = 0x46     //Communication timeout 
+    eErrorSuccess            = 0x00,    /**<Command processed successfully>*/
+    eErrorFail               = 0x01,    /**<Command processing failed >*/
+    eErrorVerify             = 0x10,    /**<1:1 Templates comparison in specific ID failed >*/
+    eErrorIdentify           = 0x11,    /**<1:N comparison has been made, no same templates here >*/
+    eErrorTmplEmpty          = 0x12,    /**<No registered template in the designated ID >*/
+    eErrorTmplNotEmpty       = 0x13,    /**<Template already exists in the specified ID >*/
+    eErrorAllTmplEmpty       = 0x14,    /**<No registered Template >*/
+    eErrorEmptyIDNoexist     = 0x15,    /**<No registerable Template ID >*/
+    eErrorBrokenIDNoexist    = 0x16,    /**<No damaged Template >*/
+    eErrorInvalidTmplData    = 0x17,    /**<The designated Template Data is invalid >*/
+    eErrorDuplicationID      = 0x18,    /**<The fingerprint has been registered >*/
+    eErrorBadQuality         = 0x19,    /**<Poor quality fingerprint image >*/
+    eErrorMergeFail          = 0x1A,    /**<Template synthesis failed >*/
+    eErrorNotAuthorized      = 0x1B,    /**<Communication password not authorized >*/
+    eErrorMemory             = 0x1C,    /**<Error in exernal Flash burning >*/
+    eErrorInvalidTmplNo      = 0x1D,    /**<The designated template ID is invalid >*/
+    eErrorInvalidParam       = 0x22,    /**<Incorrect parameter has been used >*/
+    eErrorTimeOut            = 0x23,    /**<Acquisition timeout >*/
+    eErrorGenCount           = 0x25,    /**<Invalid number of fingerprint synthesis >*/
+    eErrorInvalidBufferID    = 0x26,    /**<Wrong Buffer ID value >*/
+    eErrorFPNotDetected      = 0x28,    /**<No fingerprint input into fingerprint reader >*/
+    eErrorFPCancel           = 0x41,    /**<Command cancelled >*/
+    eErrorRecvLength         = 0x42,    /**<Wrong length of recieved data >*/
+    eErrorRecvCks            = 0x43,    /**<Wrong check code >*/
+    eErrorGatherOut          = 0x45,    /**<Exceed upper limit of acquisition times >*/
+    eErrorRecvTimeout        = 0x46     /**<Communication timeout >*/
   }eError_t;
   
+  /**
+   * @struct sErrorDescription_t
+   */ 
   typedef struct{
     /**< Gesture enumeration variable X */
     eError_t error;
-    /**< Description about the gesture enumeration variable X */
+    /**< Description about the gesture enumeration variable X >*/
     const char * description;
   }sErrorDescription_t;
 
@@ -191,298 +207,312 @@ public:
   DFRobot_ID809();
   
   /**
+   * @fn begin
    * @brief Init communication port
-   * @param Software serial or hardware serial 
-   * @return true or false
+   * @return Boolean type, the result of measure
+   * @retval Initialization succeeded
+   * @retval Initialization failed
    */
   virtual bool begin(void) = 0;
   
   /**
+   * @fn isConnected
    * @brief Test whether the module connection is ok
-   * @return true or false
+   * @return Boolean type, the result of measure
+   * @retval The connection is successful
+   * @retval The connection fails
    */
   bool isConnected();
   
   /**
+   * @fn setDeviceID
    * @brief Set module ID
-   * @param ID:1-255
-   * @return 0(succeed) or ERR_ID809
+   * @param deviceID 1-255
+   * @return Result of setting
+   * @retval 0 succeed
+   * @retval ERR_ID809 error
    */
   uint8_t setDeviceID(uint8_t deviceID);
   
   /**
+   * @fn setSecurityLevel
    * @brief Set module security level 
-   * @param security level:1-5
-   * @return 0(succeed) or ERR_ID809
+   * @param securityLevel 1-5
+   * @return Result of setting
+   * @retval 0 succeed
+   * @retval ERR_ID809 error
    */
   uint8_t setSecurityLevel(uint8_t securityLevel);
   
   /**
+   * @fn setDuplicationCheck
    * @brief Set module fingerprint replication check (Check whether the fingperint has been registered when saving it)
-   * @param 1(ON) or 0(OFF)
-   * @return 0(succeed) or ERR_ID809
+   * @param duplicationCheck 1(ON) or 0(OFF)
+   * @return Result of setting
+   * @retval 0 succeed
+   * @retval ERR_ID809 error
    */
   uint8_t setDuplicationCheck(uint8_t duplicationCheck);
   
   /**
+   * @fn setBaudrate
    * @brief Set module baud rate 
-   * @param Baudrate:in typedef enum eDeviceBaudrate_t
-   * @return 0(succeed) or ERR_ID809
+   * @param baudrate in typedef enum eDeviceBaudrate_t
+   * @return Result of setting
+   * @retval 0 succeed
+   * @retval ERR_ID809 error
    */
   uint8_t setBaudrate(eDeviceBaudrate_t baudrate);
   
   /**
+   * @fn setSelfLearn
    * @brief Set module self-learning function (Update fingeprint when fingerprint comparison succeeds)
-   * @param 1(ON) or 0(OFF)
-   * @return 0(succeed) or ERR_ID809
+   * @param selfLearn 1(ON) or 0(OFF)
+   * @return Result of setting
+   * @retval 0 succeed
+   * @retval ERR_ID809 error
    */
   uint8_t setSelfLearn(uint8_t selfLearn);
   
   /**
+   * @fn getDeviceID
    * @brief Read module ID
-   * @return ID号:1-255 or ERR_ID809
+   * @return ID of the fingerprint obtained
+   * @retval ID号:1-255
+   * @retval ERR_ID809 error
    */
   uint8_t getDeviceID();
   
   /**
+   * @fn getSecurityLevel
    * @brief Read module security level 
-   * @return Security level:1-5 or ERR_ID809
+   * @return Safety class number
+   * @retval Security level:1-5
+   * @retval ERR_ID809 error
    */
   uint8_t getSecurityLevel();
   
   /**
+   * @fn getDuplicationCheck
    * @brief Read module fingerprint replication check status
-   * @return Status：1(ON), 0(OFF) or ERR_ID809
+   * @return Test results
+   * @retval 1 ON
+   * @retval 0 OFF
+   * @retval ERR_ID809 error
    */
   uint8_t getDuplicationCheck();
   
   /**
+   * @fn getBaudrate
    * @brief Read module baud rate 
-   * @return Baudrate:in typedef enum eDEVICE_BAUDRATE_t or ERR_ID809
+   * @return Baudrate in typedef enum eDEVICE_BAUDRATE_t or ERR_ID809
    */
   uint8_t getBaudrate();
   
   /**
+   * @fn getSelfLearn
    * @brief Read module self-learning function status 
-   * @return Status：1(ON), 0(OFF) or ERR_ID809
+   * @return Test results
+   * @retval 1 ON
+   * @retval 0 OFF
+   * @retval ERR_ID809 error
    */
   uint8_t getSelfLearn();
    
   /**
+   * @fn getDeviceInfo
    * @brief Read device number 
    * @return Device number
    */
   String getDeviceInfo();
   
   /**
+   * @fn setModuleSN
    * @brief Set serial number
-   * @param String pointer 
-   * @return 0(succeed) or ERR_ID809
+   * @param SN String pointer 
+   * @return Result of setting
+   * @retval 0 succeed
+   * @retval ERR_ID809 error
    */
   uint8_t setModuleSN(const char* SN);
+  
   /**
+   * @fn getModuleSN
    * @brief Read serial number 
    * @return Serial number
    */
   String getModuleSN();
   
   /**
+   * @fn ctrlLED
    * @brief Set LED
-   * @param mode:in typedef enum eLEDMode_t
-   * @param color:in typedef enum eLEDColor_t
-   * @param blink Count: 00 represents blinking all the time
-   * @This parameter will only be valid in mode eBreathing, eFastBlink, eSlowBlink
-   * @return 0(succeed) or ERR_ID809
+   * @param mode in typedef enum eLEDMode_t
+   * @param color in typedef enum eLEDColor_t
+   * @param blinkCount 00 represents blinking all the time
+   * @n This parameter will only be valid in mode eBreathing, eFastBlink, eSlowBlink
+   * @return Result of setting
+   * @retval 0 succeed
+   * @retval ERR_ID809 error
    */
   uint8_t ctrlLED(eLEDMode_t mode,eLEDColor_t color,uint8_t blinkCount);
   
   /**
+   * @fn detectFinger
    * @brief Detect if there is finger touched 
-   * @return 1(Touched) or 0(No touch)
+   * @return Test results
+   * @retval 1 Touched 
+   * @retval 0 No touch 
    */
   uint8_t detectFinger();
   
   /**
+   * @fn getEmptyID
    * @brief Get the first registerable ID 
-   * @return Registerable ID or ERR_ID809
+   * @return Registerable ID 
    */
   uint8_t getEmptyID();
   
   /**
+   * @fn getStatusID
    * @brief Check if the ID has been registered 
-   * @return 0(Registered), 1(Unregistered) or ERR_ID809
+   * @param ID
+   * @return state
+   * @retval 0 Registered 
+   * @retval 1 Unregistered
    */
   uint8_t getStatusID(uint8_t ID);
   
   /**
+   * @fn getEnrollCount
    * @brief Get the number of registered users 
-   * @return Number of registered users or ERR_ID809
+   * @return Number of registered users 
    */
   uint8_t getEnrollCount();
   
   /**
+   * @fn getEnrolledIDList
    * @brief Get registered user list 
-   * @return 0(succeed) or ERR_ID809
+   * @param list  List of registered ids
+   * @return Results obtained
+   * @retval 0 succeed
+   * @retval ERR_ID809 error
    */
    uint8_t getEnrolledIDList(uint8_t* list);
   
   /**
+   * @fn collectionFingerprint
    * @brief Fingerprint acquisition 
-   * @return 0(succeed) or ERR_ID809
+   * @param timeout Timeout detection
+   * @return Results obtained
+   * @retval 0 succeed
+   * @retval ERR_ID809 error
    */
   uint8_t collectionFingerprint(uint16_t timeout);
   
   /**
+   * @fn storeFingerprint
    * @brief Save fingerprint 
-   * @param Fingerprint ID
-   * @return 0(succeed) or ERR_ID809
+   * @param ID Fingerprint ID
+   * @return Result of operation
+   * @retval 0 succeed
+   * @retval ERR_ID809 error
    */
   uint8_t storeFingerprint(uint8_t ID);
   
   /**
+   * @fn delFingerprint
    * @brief Delete fingerprint 
-   * @param Delete ID or DELALL(delete all)
-   * @return 0(succeed) or ERR_ID809
+   * @param ID Delete ID or DELALL(delete all)
+   * @return Result of operation
+   * @retval 0 succeed
+   * @retval ERR_ID809 error
    */
   uint8_t delFingerprint(uint8_t ID);
   
   /**
+   * @fn search
    * @brief Match the fingerprint with all fingeprints 
-   * @return Successfully matched fingerprint ID, 0(Matching failed) or ERR_ID809
+   * @return Successfully matched fingerprint ID, 0(Matching failed)
    */
   uint8_t search();
 
   /**
+   * @fn verify
    * @brief Match the fingerprint with specific fingerprint 
-   * @return Successfully matched fingerprint ID, 0(Matching failed) or ERR_ID809
+   * @brief ID
+   * @return Successfully matched fingerprint ID, 0(Matching failed)
    */
   uint8_t verify(uint8_t ID);
 
   /**
+   * @fn match
    * @brief Compare templates in two specific RamBuffers
-   * @param RamBuffer number 
-   * @param RamBuffer number 
-   * @return 0(succeed) or ERR_ID809
+   * @param RamBufferID0 number 
+   * @param RamBufferID1 number 
+   * @return Result of operation
+   * @retval 0 succeed
+   * @retval ERR_ID809 error
    */
   uint8_t match(uint8_t RamBufferID0, uint8_t RamBufferID1);
   
   /**
+   * @fn getBrokenQuantity
    * @brief Get the number of damaged fingerprints 
    * @return Damaged fingerprint ID or ERR_ID809
    */
   uint8_t getBrokenQuantity();
 
   /**
+   * @fn getBrokenID
    * @brief Get the first damaged fingerprint ID 
-   * @return Damaged fingerprint ID or ERR_ID809
+   * @return Damaged fingerprint ID 
    */
   uint8_t getBrokenID();
   
   /**
+   * @fn loadFingerprint
    * @brief Take out fingerprint template, temporarily save into RamBuffer
-   * @param Fingerprint ID 
-   * @param RamBuffer number 0-2
-   * @return 0(succeed) or ERR_ID809
+   * @param ID Fingerprint ID 
+   * @param RamBufferID number 0-2
+   * @return Result of operation
+   * @retval 0 succeed
+   * @retval ERR_ID809 error
    */
   uint8_t loadFingerprint(uint8_t ID, uint8_t RamBufferID);
   
   /**
+   * @fn enterSleepState
    * @brief Enter sleep mode
-   * @return 0(succeed) or ERR_ID809
+   * @return Result of operation
+   * @retval 0 succeed
+   * @retval ERR_ID809 error
    */
   uint8_t enterSleepState();
   
   /**
+   * @fn getErrorDescription
    * @brief Get error information
    * @return Text description of error information
    */
   String getErrorDescription();
-  
+  uint16_t FINGERPRINT_CAPACITY = 80;
  // bool setDbgSerial(Stream &s_){dbg = &s_; return true;}
 protected:
-   /**
-   * @brief Set parameter 
-   * @param Data type+ data
-   * @return 0(succeed) or ERR_ID809
-   */
+
   uint8_t setParam(uint8_t* data);
-  
-   /**
-   * @brief Read parameter 
-   * @param Data type 
-   * @return data or ERR_ID809
-   */
   uint8_t getParam(uint8_t* data);
-  
-  /**
-   * @brief Capture fingerprint image 
-   * @return 0(succeed) or ERR_ID809
-   */
   uint8_t getImage();
-   
-   /**
-   * @brief Take image as template 
-   * @param Ram Buffer number
-   * @return 0(succeed) or ERR_ID809
-   */
   uint8_t generate(uint8_t RamBufferID);
-  
- /**
-   * @brief Fingerprint synthesis 
-   * @return 0(succeed) or ERR_ID809
-   */
   uint8_t merge();
-  
- /**
-   * @brief Packing data frame 
-   * @param Data type：CMD_TYPE or DATA_TYPE
-   * @param Command
-   * @param Data 
-   * @param Length
-   * @return Data frame 
-   */
   pCmdPacketHeader_t pack(uint8_t type, uint16_t cmd, const char *payload, uint16_t len);
-  
- /**
-   * @brief Read frame header 
-   * @param Frame header struct of response packet
-   * @return Response packet type：RCM_TYPE,DATA_TYPE or 1(reading timeout)
-   */
   uint16_t readPrefix( pRcmPacketHeader_t header );
-  
- /**
-   * @brief Read data
-   * @param Pointer for saving data 
-   * @return 0(success) or ERR_ID809
-   */
   uint8_t responsePayload(void* buf);
-  
- /**
-   * @brief Get command packet CKS
-   * @param Command packet frame 
-   * @return CKS
-   */
   uint16_t getCmdCKS(pCmdPacketHeader_t packet);
-  
- /**
-   * @brief Get response packet CKS
-   * @param Response packet frame 
-   * @return CKS
-   */
   uint16_t getRcmCKS(pRcmPacketHeader_t packet);
   bool ISIIC = true;
 protected:
-    /**
-   * @brief Send data 
-   * @param Data frame
-   */
+
   virtual void sendPacket(pCmdPacketHeader_t header) =0;
-  /**
-   * @brief Read byte 
-   * @param Pointer for saving data 
-   * @param Length of data to be received 
-   * @return Actual received data length 
-   */
   virtual size_t readN(void* buf_, size_t len) =0;
   
   uint16_t _PacketSize = 0;  //The length of the packet to be sent
@@ -497,32 +527,26 @@ private:
   eError_t _error;           //Error code 
 };
 
-class DFRobot_ID809_IIC : public DFRobot_ID809{
+class DFRobot_ID809_I2C : public DFRobot_ID809{
 public: 
-  DFRobot_ID809_IIC(TwoWire *pWire = &Wire, uint8_t address = 0x1F);
+  DFRobot_ID809_I2C(TwoWire *pWire = &Wire, uint8_t address = 0x1F);
+  
+  /**
+   * @fn begin
+   * @brief Init communication port
+   * @return Boolean type, the result of measure
+   * @retval 初始化成功
+   * @retval 初始化失败
+   */
    bool begin();
+   
 protected:
    void sendPacket(pCmdPacketHeader_t pBuf);
    size_t readN(void* pBuf, size_t size);
+
 private:
   TwoWire *_pWire;
   uint8_t _deviceAddr;
 };
-
-class DFRobot_ID809_UART : public DFRobot_ID809{
-
-public: 
-  DFRobot_ID809_UART(uint32_t baudRate);
-  bool begin();
-protected:
-   void sendPacket(pCmdPacketHeader_t header);
-   size_t readN(void* buf_, size_t len);
-private:
-
-  Stream *s;
-  uint32_t _baudRate;
-  
-};
-
 #endif
 

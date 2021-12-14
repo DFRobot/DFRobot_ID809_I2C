@@ -1,25 +1,23 @@
 /*!
  * @file fingerprintRegistration.ino
  * @brief Fingerprint Acquisition and Saving 
- * @n This module can be controlled by hardware serial or software serial 
+ * @details This module can be controlled by hardware serial or software serial 
  * @n Experiment Phenomenon：auto retrieve unregistered ID, collect fingerprint 3 times.  
  * @n           In collecting, set LED ring to breathing lighting in blue, and then to quick blink in yellow 3 times when completed 
  * @n           At last, save the fingerprint in an unregistered ID, the green LED lights up for 1s and turns off. 
  * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
- * @licence     The MIT License (MIT)
+ * @License     The MIT License (MIT)
  * @author [Eddard](Eddard.liu@dfrobot.com)
- * @version  V1.0
+ * @version  V1.1
  * @date  2020-03-19
- * @get from https://www.dfrobot.com
- * @url https://github.com/cdjq/DFRobot_ID809
+ * @url https://github.com/DFRobot/DFRobot_ID809_I2C
 */
 
-#include <DFRobot_ID809.h>
+#include <DFRobot_ID809_I2C.h>
 
 #define COLLECT_NUMBER 3  //Fingerprint sampling times, can be set to 2-3
 
-DFRobot_ID809_IIC fingerprint;
-//DFRobot_ID809_UART fingerprint(115200);
+DFRobot_ID809_I2C fingerprint;
 //String desc;
 
 void setup(){

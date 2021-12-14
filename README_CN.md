@@ -1,5 +1,4 @@
 # DFRobot_ID809_I2C
-- [中文版](./README_CN.md)
 This capacitive fingerprint sensor supports fingerprint capture, image processing, fingerprint storage, fingerprint comparison and so on.
 Taking ID809 high-performance processor and semiconductor fingerprint sensor as the core, the sensor adopts built-in IDfinger6.0 algorithm, which can complete all fingerprint identification work independently.<br>
 
@@ -9,8 +8,8 @@ This fingerprint sensor comes with round breathing LEDs and has a simple structu
 
 ![Product Image](./resources/images/SEN0348.png)
 
-## Product Link (https://www.dfrobot.com/product-2051.html)
-    SEN0348: Capacitive Fingerprint Sensor / Scanner
+## Product Link (https://www.dfrobot.com.cn/goods-2793.html)
+    SEN0348: 电容式指纹识别传感器
 	
    
 ## Table of Contents

@@ -1,28 +1,26 @@
 /*!
  * @file comprehensiveExample.ino
  * @brief Comprehensive Example 
- * @n This module can be controlled by hardware serial or software serial. Pin IRQ should be connected to D6 in this experiment. 
+ * @details This module can be controlled by hardware serial or software serial. Pin IRQ should be connected to D6 in this experiment. 
  * @n Experiment Phenomenon：when finger press down, the blue LED blinks quickly 3 times, which means it enters fingerprint 
  * @n comparison mode.
  * @n                        The yellow LED blinks quickly 3 times for entering fingerprint registration mode
  * @n                        The red LED blinks quickly 3 times for entering fingerprint deletion mode, and delete this fringerprint
  * @n                        Enter sleep mode when idle for 5 seconds 
  * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
- * @licence     The MIT License (MIT)
+ * @license     The MIT license (MIT)
  * @author [Eddard](Eddard.liu@dfrobot.com)
- * @version  V1.0
+ * @version  V1.1
  * @date  2020-03-19
- * @get from https://www.dfrobot.com
- * @url https://github.com/cdjq/DFRobot_ID809
+ * @url https://github.com/DFRobot/DFRobot_ID809_I2C
 */
 
-#include <DFRobot_ID809.h>
+#include <DFRobot_ID809_I2C.h>
 
 #define COLLECT_NUMBER 3  //Fingerprint sampling times, can be set to 1-3
 #define IRQ         6  //IRQ pin 
 
-DFRobot_ID809_IIC fingerprint;
-//DFRobot_ID809_UART fingerprint(115200);
+DFRobot_ID809_I2C fingerprint;
 //String desc;
 
 void setup(){

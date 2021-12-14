@@ -1,12 +1,12 @@
 #######################################
-# Syntax DFRobot_ID809
+# Syntax DFRobot_ID809_I2C
 #######################################
 
 #######################################
 # Datatypes (KEYWORD1)
 #######################################
 
-DFRobot_ID809	KEYWORD1
+DFRobot_ID809_I2C	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)

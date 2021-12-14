@@ -1,20 +1,18 @@
 /*!
  * @file fingerprintMatching.ino
  * @brief Gather fingerprint and compare it with fingerprints in fingerprint library
- * @n Experiment Phenomenon：capture fingerprint image and compare it with all fingerprints in the fingerprint library
+ * @details Experiment Phenomenon：capture fingerprint image and compare it with all fingerprints in the fingerprint library
                 If matched successfully, light up green LED and print ID number. Return 0 when failed.
  * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
- * @licence     The MIT License (MIT)
+ * @License     The MIT License (MIT)
  * @author [Eddard](Eddard.liu@dfrobot.com)
- * @version  V1.0
+ * @version  V1.1
  * @date  2020-03-19
- * @get from https://www.dfrobot.com
- * @url https://github.com/cdjq/DFRobot_ID809
+ * @url https://github.com/DFRobot/DFRobot_ID809_I2C
 */
-#include <DFRobot_ID809.h>
+#include <DFRobot_ID809_I2C.h>
 
-DFRobot_ID809_IIC fingerprint;
-//DFRobot_ID809_UART fingerprint(115200);
+DFRobot_ID809_I2C fingerprint;
 //String desc;
 
 void setup(){

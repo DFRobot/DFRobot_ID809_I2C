@@ -1,20 +1,18 @@
 /*!
  * @file fingerprintDeletion.ino
  * @brief Delete a specific fingerprint 
- * @n Experiment phenomenon：press your finger on the sensor, if this fingerprint is registered, delete it and LED turns on in green. 
+ * @details Experiment phenomenon：press your finger on the sensor, if this fingerprint is registered, delete it and LED turns on in green. 
       If it is unregistered or fingerprint collection fails, LED light turns on in red.
  * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
- * @licence     The MIT License (MIT)
+ * @License     The MIT License (MIT)
  * @author [Eddard](Eddard.liu@dfrobot.com)
- * @version  V1.0
+ * @version  V1.1
  * @date  2020-03-19
- * @get from https://www.dfrobot.com
- * @url https://github.com/DFRobot/DFRobot_ID809
+ * @url https://github.com/DFRobot/DFRobot_ID809_I2C
 */
-#include <DFRobot_ID809.h>
+#include <DFRobot_ID809_I2C.h>
 
-DFRobot_ID809_IIC fingerprint;
-//DFRobot_ID809_UART fingerprint(115200);
+DFRobot_ID809_I2C fingerprint;
 //String desc;
 
 void setup(){
