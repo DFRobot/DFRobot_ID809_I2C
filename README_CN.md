@@ -1,4 +1,6 @@
 # DFRobot_ID809_I2C
+- [English Version](./README.md)
+
 This capacitive fingerprint sensor supports fingerprint capture, image processing, fingerprint storage, fingerprint comparison and so on.
 Taking ID809 high-performance processor and semiconductor fingerprint sensor as the core, the sensor adopts built-in IDfinger6.0 algorithm, which can complete all fingerprint identification work independently.<br>
 
@@ -340,13 +342,11 @@ M0        |      √       |              |             |
 
 ## History
 
-- Data 2021-12-14
-- Version V1.1
-
+- 2021/12/14 - Version 1.0.0 released.
 
 ## Credits
 
-Written by(Eddard.liu@dfrobot.com), 2020. (Welcome to our [website](https://www.dfrobot.com/))
+Written by Eddard(Eddard.liu@dfrobot.com), 2020. (Welcome to our [website](https://www.dfrobot.com/))
 
 
 
