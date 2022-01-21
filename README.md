@@ -42,8 +42,8 @@ To use this library, first download the library file, paste it into the \Arduino
    * @fn begin
    * @brief Init communication port
    * @return Boolean type, the result of measure
-   * @retval 初始化成功
-   * @retval 初始化失败
+   * @retval Initialization succeeded
+   * @retval Initialization failed
    */
   virtual bool begin(void) = 0;
   
@@ -51,8 +51,8 @@ To use this library, first download the library file, paste it into the \Arduino
    * @fn isConnected
    * @brief Test whether the module connection is ok
    * @return Boolean type, the result of measure
-   * @retval 连接成功
-   * @retval 连接失败
+   * @retval The connection is successful
+   * @retval The connection fails
    */
   bool isConnected();
   
@@ -60,9 +60,9 @@ To use this library, first download the library file, paste it into the \Arduino
    * @fn setDeviceID
    * @brief Set module ID
    * @param deviceID 1-255
-   * @return 设置的结果
+   * @return Result of setting
    * @retval 0 succeed
-   * @retval ERR_ID809 错误
+   * @retval ERR_ID809 error
    */
   uint8_t setDeviceID(uint8_t deviceID);
   
@@ -70,9 +70,9 @@ To use this library, first download the library file, paste it into the \Arduino
    * @fn setSecurityLevel
    * @brief Set module security level 
    * @param securityLevel 1-5
-   * @return 设置的结果
+   * @return Result of setting
    * @retval 0 succeed
-   * @retval ERR_ID809 错误
+   * @retval ERR_ID809 error
    */
   uint8_t setSecurityLevel(uint8_t securityLevel);
   
@@ -80,9 +80,9 @@ To use this library, first download the library file, paste it into the \Arduino
    * @fn setDuplicationCheck
    * @brief Set module fingerprint replication check (Check whether the fingperint has been registered when saving it)
    * @param duplicationCheck 1(ON) or 0(OFF)
-   * @return 设置的结果
+   * @return Result of setting
    * @retval 0 succeed
-   * @retval ERR_ID809 错误
+   * @retval ERR_ID809 error
    */
   uint8_t setDuplicationCheck(uint8_t duplicationCheck);
   
@@ -90,9 +90,9 @@ To use this library, first download the library file, paste it into the \Arduino
    * @fn setBaudrate
    * @brief Set module baud rate 
    * @param baudrate in typedef enum eDeviceBaudrate_t
-   * @return 设置的结果
+   * @return Result of setting
    * @retval 0 succeed
-   * @retval ERR_ID809 错误
+   * @retval ERR_ID809 error
    */
   uint8_t setBaudrate(eDeviceBaudrate_t baudrate);
   
@@ -100,37 +100,37 @@ To use this library, first download the library file, paste it into the \Arduino
    * @fn setSelfLearn
    * @brief Set module self-learning function (Update fingeprint when fingerprint comparison succeeds)
    * @param selfLearn 1(ON) or 0(OFF)
-   * @return 设置的结果
+   * @return Result of setting
    * @retval 0 succeed
-   * @retval ERR_ID809 错误
+   * @retval ERR_ID809 error
    */
   uint8_t setSelfLearn(uint8_t selfLearn);
   
   /**
    * @fn getDeviceID
    * @brief Read module ID
-   * @return 获取的指纹ID
+   * @return ID of the fingerprint obtained
    * @retval ID号:1-255
-   * @retval ERR_ID809 错误
+   * @retval ERR_ID809 error
    */
   uint8_t getDeviceID();
   
   /**
    * @fn getSecurityLevel
    * @brief Read module security level 
-   * @return 安全等级编号
+   * @return Safety class number
    * @retval Security level:1-5
-   * @retval ERR_ID809 错误
+   * @retval ERR_ID809 error
    */
   uint8_t getSecurityLevel();
   
   /**
    * @fn getDuplicationCheck
    * @brief Read module fingerprint replication check status
-   * @return 检测结果
+   * @return Test results
    * @retval 1 ON
    * @retval 0 OFF
-   * @retval ERR_ID809 错误
+   * @retval ERR_ID809 error
    */
   uint8_t getDuplicationCheck();
   
@@ -144,10 +144,10 @@ To use this library, first download the library file, paste it into the \Arduino
   /**
    * @fn getSelfLearn
    * @brief Read module self-learning function status 
-   * @return 检测结果
+   * @return Test results
    * @retval 1 ON
    * @retval 0 OFF
-   * @retval ERR_ID809 错误
+   * @retval ERR_ID809 error
    */
   uint8_t getSelfLearn();
    
@@ -162,9 +162,9 @@ To use this library, first download the library file, paste it into the \Arduino
    * @fn setModuleSN
    * @brief Set serial number
    * @param SN String pointer 
-   * @return 设置的结果
+   * @return Result of setting
    * @retval 0 succeed
-   * @retval ERR_ID809 错误
+   * @retval ERR_ID809 error
    */
   uint8_t setModuleSN(const char* SN);
   
@@ -182,16 +182,16 @@ To use this library, first download the library file, paste it into the \Arduino
    * @param color in typedef enum eLEDColor_t
    * @param blinkCount 00 represents blinking all the time
    * @n This parameter will only be valid in mode eBreathing, eFastBlink, eSlowBlink
-   * @return 设置的结果
+   * @return Result of setting
    * @retval 0 succeed
-   * @retval ERR_ID809 错误
+   * @retval ERR_ID809 error
    */
   uint8_t ctrlLED(eLEDMode_t mode,eLEDColor_t color,uint8_t blinkCount);
   
   /**
    * @fn detectFinger
    * @brief Detect if there is finger touched 
-   * @return 检测的结果
+   * @return Test results
    * @retval 1 Touched 
    * @retval 0 No touch 
    */
@@ -208,7 +208,7 @@ To use this library, first download the library file, paste it into the \Arduino
    * @fn getStatusID
    * @brief Check if the ID has been registered 
    * @param ID
-   * @return 状态
+   * @return state
    * @retval 0 Registered 
    * @retval 1 Unregistered
    */
@@ -224,20 +224,20 @@ To use this library, first download the library file, paste it into the \Arduino
   /**
    * @fn getEnrolledIDList
    * @brief Get registered user list 
-   * @param list 已注册的ID列表
-   * @return 获取的结果
+   * @param list  List of registered ids
+   * @return Results obtained
    * @retval 0 succeed
-   * @retval ERR_ID809 错误
+   * @retval ERR_ID809 error
    */
    uint8_t getEnrolledIDList(uint8_t* list);
   
   /**
    * @fn collectionFingerprint
    * @brief Fingerprint acquisition 
-   * @param timeout 超时检测
-   * @return 获取的结果
+   * @param timeout Timeout detection
+   * @return Results obtained
    * @retval 0 succeed
-   * @retval ERR_ID809 错误
+   * @retval ERR_ID809 error
    */
   uint8_t collectionFingerprint(uint16_t timeout);
   
@@ -245,9 +245,9 @@ To use this library, first download the library file, paste it into the \Arduino
    * @fn storeFingerprint
    * @brief Save fingerprint 
    * @param ID Fingerprint ID
-   * @return 操作的结果
+   * @return Result of operation
    * @retval 0 succeed
-   * @retval ERR_ID809 错误
+   * @retval ERR_ID809 error
    */
   uint8_t storeFingerprint(uint8_t ID);
   
@@ -255,9 +255,9 @@ To use this library, first download the library file, paste it into the \Arduino
    * @fn delFingerprint
    * @brief Delete fingerprint 
    * @param ID Delete ID or DELALL(delete all)
-   * @return 操作的结果
+   * @return Result of operation
    * @retval 0 succeed
-   * @retval ERR_ID809 错误
+   * @retval ERR_ID809 error
    */
   uint8_t delFingerprint(uint8_t ID);
   
@@ -281,9 +281,9 @@ To use this library, first download the library file, paste it into the \Arduino
    * @brief Compare templates in two specific RamBuffers
    * @param RamBufferID0 number 
    * @param RamBufferID1 number 
-   * @return 操作的结果
+   * @return Result of operation
    * @retval 0 succeed
-   * @retval ERR_ID809 错误
+   * @retval ERR_ID809 error
    */
   uint8_t match(uint8_t RamBufferID0, uint8_t RamBufferID1);
   
@@ -306,18 +306,18 @@ To use this library, first download the library file, paste it into the \Arduino
    * @brief Take out fingerprint template, temporarily save into RamBuffer
    * @param ID Fingerprint ID 
    * @param RamBufferID number 0-2
-   * @return 操作的结果
+   * @return Result of operation
    * @retval 0 succeed
-   * @retval ERR_ID809 错误
+   * @retval ERR_ID809 error
    */
   uint8_t loadFingerprint(uint8_t ID, uint8_t RamBufferID);
   
   /**
    * @fn enterSleepState
    * @brief Enter sleep mode
-   * @return 操作的结果
+   * @return Result of operation
    * @retval 0 succeed
-   * @retval ERR_ID809 错误
+   * @retval ERR_ID809 error
    */
   uint8_t enterSleepState();
   

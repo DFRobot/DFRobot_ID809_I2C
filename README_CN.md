@@ -40,19 +40,19 @@
 ```C++
   /**
    * @fn begin
-   * @brief Init communication port
-   * @return Boolean type, the result of measure
-   * @retval Initialization succeeded
-   * @retval Initialization failed
+   * @brief 初始化
+   * @return 初始化结果
+   * @retval 成功
+   * @retval 失败
    */
   virtual bool begin(void) = 0;
   
   /**
    * @fn isConnected
    * @brief 测试模块是否正常连接
-   * @return Boolean type, the result of measure
-   * @retval The connection is successful
-   * @retval The connection fails
+   * @return 连接结果
+   * @retval 成功
+   * @retval 失败
    */
   bool isConnected();
   
