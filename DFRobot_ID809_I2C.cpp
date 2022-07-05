@@ -953,11 +953,11 @@ void DFRobot_ID809_I2C::sendPacket(pCmdPacketHeader_t pBuf)
   }
  
   _pWire->beginTransmission(_deviceAddr);
-  //Serial.println("tx->");
+ // Serial.println("tx->");
   for(uint16_t i = 0; i < _PacketSize; i++) {
    _pWire->write(_pBuf[i]);
 	//Serial.print(_pBuf[i],HEX);
-	//Serial.print(" ");
+//	Serial.print(" ");
   }
   _pWire->endTransmission();
 }
@@ -970,8 +970,10 @@ size_t DFRobot_ID809_I2C::readN(void* pBuf, size_t size)
   }
   
   uint8_t * _pBuf = (uint8_t *)pBuf;
+  
+ #if !CONFIG_IDF_TARGET_ESP32C3 && !CONFIG_IDF_TARGET_ESP32S3
   _pWire->beginTransmission(_deviceAddr);
-
+#endif
   while(size > 32) {
     
     for(uint16_t i = 0; i < 32; i++) {
@@ -980,17 +982,21 @@ size_t DFRobot_ID809_I2C::readN(void* pBuf, size_t size)
     }
     size -= 32;
   }
-  //Serial.println("rx->");
+ // Serial.println("rx->");
   
   for(uint16_t i = 0; i < size; i++) {
+    //Serial.println("requestFrom->");
 	  _pWire->requestFrom(_deviceAddr, (uint8_t) 1);
+  //  Serial.println("dowm->");
     _pBuf[i + len - size] = _pWire->read();
 	//Serial.print(_pBuf[i + len - size],HEX);
-	//Serial.print(" ");
+//	Serial.print(" ");
   }
  // delay(10);
+ #if !CONFIG_IDF_TARGET_ESP32C3 && !CONFIG_IDF_TARGET_ESP32S3
   if( _pWire->endTransmission() != 0) {
     return 0;
-  }
+   }
+# endif 
   return len;
 }
