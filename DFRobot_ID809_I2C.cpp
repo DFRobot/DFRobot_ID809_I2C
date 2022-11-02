@@ -149,7 +149,7 @@ String DFRobot_ID809::getDeviceInfo()
   uint16_t dataLen = buf[0]+(buf[1]<<8)+1;
     //Serial.print("dataLen=");
   //Serial.println(dataLen);
-  if((data = (char *)malloc(dataLen)) == NULL) {
+  if((data = (char *)malloc(dataLen+10)) == NULL) {
     LDBG("no memory!!!\r\n");
     while(1);
   }
