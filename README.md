@@ -344,6 +344,7 @@ M0        |      √       |              |             |
 ## History
 
 - 2021/12/14 - Version 1.0.0 released.
+- 2023/08/04 - Version 1.0.1 released.
 
 ## Credits
 

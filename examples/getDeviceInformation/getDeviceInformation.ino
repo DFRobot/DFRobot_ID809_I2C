@@ -13,7 +13,6 @@
 #include <DFRobot_ID809_I2C.h>
 
 DFRobot_ID809_I2C fingerprint;
-//DFRobot_ID809_UART fingerprint(115200);
 //String desc;
 
 void setup(){
