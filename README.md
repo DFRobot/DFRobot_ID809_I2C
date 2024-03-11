@@ -345,6 +345,7 @@ M0        |      √       |              |             |
 
 - 2021/12/14 - Version 1.0.0 released.
 - 2023/08/04 - Version 1.0.1 released.
+- 2024/03/11 - Version 1.1.1 released.
 
 ## Credits
 
