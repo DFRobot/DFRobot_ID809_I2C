@@ -972,44 +972,45 @@ size_t DFRobot_ID809_I2C::readN(void* pBuf, size_t size)
 
   uint8_t* _pBuf = (uint8_t*)pBuf;
 
-// #if !CONFIG_IDF_TARGET_ESP32C3 && !CONFIG_IDF_TARGET_ESP32S3
-//   _pWire->beginTransmission(_deviceAddr);
-// #endif
-  while (size > 32) {
+  #if !ESP32
+    _pWire->beginTransmission(_deviceAddr);
+  #endif
 
-    _pWire->requestFrom(_deviceAddr, (uint8_t)32);
+  #if ESP32
+    while (size > 32) {
+        for (uint16_t i = 0; i < 32; i++) {
+            _pWire->requestFrom(_deviceAddr, (uint8_t) 1);
+            _pBuf[i + len - size] = _pWire->read();
+        }
+        size -= 32;
+    }
+
+    for (uint16_t i = 0; i < size; i++) {
+        _pWire->requestFrom(_deviceAddr, (uint8_t) 1);
+        _pBuf[i + len - size] = _pWire->read();
+    }
+  #else
+    while (size > 32) {
+      _pWire->requestFrom(_deviceAddr, (uint8_t)32);
+      while (_pWire->available()) {
+        *_pBuf = _pWire->read();   // Use read() to receive and put into buf
+        _pBuf++;
+      }
+      size -= 32;
+    }
+
+    _pWire->requestFrom(_deviceAddr, (uint8_t)size);   // Master device requests size bytes from slave device, which can be accepted by master device with read() or available()
     while (_pWire->available()) {
       *_pBuf = _pWire->read();   // Use read() to receive and put into buf
       _pBuf++;
     }
-    // for (uint16_t i = 0; i < 32; i++) {
-    //   _pWire->requestFrom(_deviceAddr, 1);
-    //   _pBuf[i + len - size] = _pWire->read();
-    // }
-    size -= 32;
-  }
-  // Serial.println("rx->");
+  #endif
 
-  // for (uint16_t i = 0; i < size; i++) {
-  //   //Serial.println("requestFrom->");
-  //   _pWire->requestFrom(_deviceAddr, (uint8_t)1);
-  //   //  Serial.println("dowm->");
-  //   _pBuf[i + len - size] = _pWire->read();
-  //   //Serial.print(_pBuf[i + len - size],HEX);
-  //   //	Serial.print(" ");
-  // }
-  _pWire->requestFrom(_deviceAddr, (uint8_t)size);   // Master device requests size bytes from slave device, which can be accepted by master device with read() or available()
-  while (_pWire->available()) {
-    *_pBuf = _pWire->read();   // Use read() to receive and put into buf
-    _pBuf++;
-  }
-  // delay(10);
-
-//  #if !CONFIG_IDF_TARGET_ESP32C3 && !CONFIG_IDF_TARGET_ESP32S3
-//   if( _pWire->endTransmission() != 0) {
-//     return 0;
-//    }
-// # endif
+  #if !ESP32
+      if (_pWire->endTransmission() != 0) {
+          return 0;
+      }
+  #endif
 
   return len;
 }
