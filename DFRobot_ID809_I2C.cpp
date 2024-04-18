@@ -972,9 +972,9 @@ size_t DFRobot_ID809_I2C::readN(void* pBuf, size_t size)
 
   uint8_t* _pBuf = (uint8_t*)pBuf;
 
-// #if !CONFIG_IDF_TARGET_ESP32C3 && !CONFIG_IDF_TARGET_ESP32S3
-//   _pWire->beginTransmission(_deviceAddr);
-// #endif
+ #if !CONFIG_IDF_TARGET_ESP32C3 && !CONFIG_IDF_TARGET_ESP32S3
+   _pWire->beginTransmission(_deviceAddr);
+ #endif
   while (size > 32) {
 
     _pWire->requestFrom(_deviceAddr, (uint8_t)32);
@@ -990,26 +990,26 @@ size_t DFRobot_ID809_I2C::readN(void* pBuf, size_t size)
   }
   // Serial.println("rx->");
 
-  // for (uint16_t i = 0; i < size; i++) {
-  //   //Serial.println("requestFrom->");
-  //   _pWire->requestFrom(_deviceAddr, (uint8_t)1);
-  //   //  Serial.println("dowm->");
-  //   _pBuf[i + len - size] = _pWire->read();
-  //   //Serial.print(_pBuf[i + len - size],HEX);
-  //   //	Serial.print(" ");
-  // }
-  _pWire->requestFrom(_deviceAddr, (uint8_t)size);   // Master device requests size bytes from slave device, which can be accepted by master device with read() or available()
-  while (_pWire->available()) {
-    *_pBuf = _pWire->read();   // Use read() to receive and put into buf
-    _pBuf++;
-  }
+   for (uint16_t i = 0; i < size; i++) {
+     //Serial.println("requestFrom->");
+     _pWire->requestFrom(_deviceAddr, (uint8_t)1);
+     //  Serial.println("dowm->");
+     _pBuf[i] = _pWire->read();
+     //Serial.print(_pBuf[i + len - size],HEX);
+     //	Serial.print(" ");
+   }
+  //_pWire->requestFrom(_deviceAddr, (uint8_t)size);   // Master device requests size bytes from slave device, which can be accepted by master device with read() or available()
+ // while (_pWire->available()) {
+  //  *_pBuf = _pWire->read();   // Use read() to receive and put into buf
+   // _pBuf++;
+  //}
   // delay(10);
 
-//  #if !CONFIG_IDF_TARGET_ESP32C3 && !CONFIG_IDF_TARGET_ESP32S3
-//   if( _pWire->endTransmission() != 0) {
-//     return 0;
-//    }
-// # endif
+  #if !CONFIG_IDF_TARGET_ESP32C3 && !CONFIG_IDF_TARGET_ESP32S3
+   if( _pWire->endTransmission() != 0) {
+     return 0;
+    }
+ # endif
 
   return len;
 }
